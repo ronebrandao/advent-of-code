@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::{env, u32};
+use std::{env, i32};
 
 fn main() {
     let current_dir = env::current_dir().unwrap();
@@ -10,27 +10,28 @@ fn main() {
 
     let reader = BufReader::new(file);
 
-    let mut biggest_amount_of_calories: u32 = 0;
-    let mut sum: u32 = 0;
+    let mut biggest = vec![];
+    let mut sum: i32 = 0;
 
     for line in reader.lines() {
         let line_str = line.unwrap();
 
         if line_str != "" {
             sum += line_str
-                .parse::<u32>()
+                .parse::<i32>()
                 .expect("Deu ruim na hora de fazer o parse da linha");
         } else {
+            biggest.push(sum);
             sum = 0;
-        }
-
-        if sum > biggest_amount_of_calories {
-            biggest_amount_of_calories = sum;
         }
     }
 
+    biggest.sort_by_key(|&x| -x);
+
+    println!("The greatest amount of calories is: {}", biggest[0]);
+
     println!(
-        "The greatest amount of calories is: {}",
-        biggest_amount_of_calories,
+        "Thre sum of the 3 greatest is: {}",
+        biggest[0] + biggest[1] + biggest[2]
     );
 }
